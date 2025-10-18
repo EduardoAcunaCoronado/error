@@ -4,10 +4,14 @@ import com.ejemplo.error.exceptions.UserNotFoundException;
 import com.ejemplo.error.models.domain.User;
 import com.ejemplo.error.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/app")
@@ -25,13 +29,14 @@ public class AppController {
     }
 
     @GetMapping("/show/{id}")
-    public User show(@PathVariable(name = "id") Long id) {
-        User user = userService.findById(id);
-        if (user == null) {
-            throw new UserNotFoundException("Error, usuario no encontrado");
+    public ResponseEntity<?> show(@PathVariable(name = "id") Long id) {
+//        User user = userService.findById(id).orElseThrow(() -> new UserNotFoundException("Error, usuario no encontrado"));
+        Optional<User> user = userService.findById(id);
+        if (user.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
-        System.out.println(user.getName());
-        return user;
+//        System.out.println(user.getName());
+        return ResponseEntity.ok(user.get());
     }
 
 }
