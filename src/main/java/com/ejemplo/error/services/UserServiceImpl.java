@@ -1,6 +1,7 @@
 package com.ejemplo.error.services;
 
 import com.ejemplo.error.models.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,16 +11,8 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired
     private List<User> users;
-
-    public UserServiceImpl() {
-        this.users = new ArrayList<>();
-        users.add(new User(1L, "Pepe1", "Gonzalez1", null));
-        users.add(new User(2L, "Pepe2", "Gonzalez2", null));
-        users.add(new User(3L, "Pepe3", "Gonzalez3", null));
-        users.add(new User(4L, "Pepe4", "Gonzalez4", null));
-        users.add(new User(5L, "Pepe5", "Gonzalez5", null));
-    }
 
     @Override
     public List<User> findAll() {
@@ -28,13 +21,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findById(Long id) {
-        User user = null;
-        for (User u : users) {
-            if (u.getId().equals(id)) {
-                user = u;
-                break;
-            }
-        }
-        return Optional.ofNullable(user);
+//        User user = null;
+//        for (User u : users) {
+//            if (u.getId().equals(id)) {
+//                user = u;
+//                break;
+//            }
+//        }
+        return users.stream().filter(u -> u.getId().equals(id)).findFirst();
     }
 }
